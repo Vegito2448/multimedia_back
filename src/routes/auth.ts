@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import { createUser, login, renewToken } from "../controllers";
-import { validateFields, validateToken } from "../middlewares";
+import { createUser, login, renewToken } from "../controllers/index.ts";
+import { validateFields, validateToken } from "../middlewares/index.ts";
 
 /*
   User Routes /auth

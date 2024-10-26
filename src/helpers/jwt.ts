@@ -1,6 +1,7 @@
 import { createSecretKey } from "crypto";
 import { SignJWT } from "jose";
 import { IUser } from "../types";
+import process from "node:process";
 
 const generateToken = async ({ id, name }: IUser) => {
   try {

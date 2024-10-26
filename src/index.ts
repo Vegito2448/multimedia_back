@@ -1,8 +1,9 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import { dbConnection } from "./database";
-import authRouter from './routes/auth';
+import process from "node:process";
+import { dbConnection } from "./database/index.ts";
+import { authRouter, eventsRouter } from "./routes/index.ts";
 
 
 dotenv.config();
@@ -27,8 +28,10 @@ app.use(express.json());
 // TODO: Add routes here // create, login, renew
 // TODO: CRUD: Events
 app.use('/api/auth', authRouter);
-
+app.use('/api/events', eventsRouter);
 // Listen request
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+export default app;

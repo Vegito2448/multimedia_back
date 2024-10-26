@@ -1,4 +1,6 @@
-import User from "./User";
-
-export { User };
+import User from "./User.ts";
+import Event from "./event.ts";
+export {
+  Event, User
+};
 

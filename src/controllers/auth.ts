@@ -1,12 +1,12 @@
 
 import { compare, genSalt, hash } from "bcrypt";
 import { Request, Response } from "express";
-import { generateToken } from "../helpers";
-import { RequestWithUser } from "../middlewares";
-import { User } from "../models";
-import { IUser } from "../types";
+import { generateToken } from "../helpers/index.ts";
+import { RequestWithUser } from "../middlewares/index.ts";
+import { User } from "../models/index.ts";
+import { GenericRecord, IUser } from "../types/index.ts";
 
-const createUser = async (req: Request<{}, {}, IUser>, res: Response) => {
+const createUser = async (req: Request<GenericRecord, GenericRecord, IUser>, res: Response) => {
   const { name, email, password } = req.body;
 
   try {
@@ -51,11 +51,11 @@ const createUser = async (req: Request<{}, {}, IUser>, res: Response) => {
   }
 };
 
-const login = async (req: Request<{}, {}, IUser>, res: Response) => {
+const login = async (req: Request<GenericRecord, GenericRecord, IUser>, res: Response) => {
   const { email, password } = req.body;
   try {
 
-    let user = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       res.status(400).json({
@@ -66,7 +66,6 @@ const login = async (req: Request<{}, {}, IUser>, res: Response) => {
     }
 
     // Check password
-
     const validPassword = await compare(password.toString(), user.password);
 
     if (!validPassword) {

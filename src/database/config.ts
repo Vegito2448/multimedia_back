@@ -1,4 +1,5 @@
 import { connect } from "mongoose";
+import process from "node:process";
 
 const dbConnection = async () => {
 

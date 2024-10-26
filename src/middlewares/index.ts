@@ -1,3 +1,3 @@
-export * from "./validateFields";
-export * from "./validateToken";
+export * from "./validateFields.ts";
+export * from "./validateToken.ts";
 

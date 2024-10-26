@@ -1,7 +1,8 @@
-import { createSecretKey } from "crypto";
 import { NextFunction, Request, Response } from "express";
 import { jwtVerify } from "jose";
-import { IUser } from "../types";
+import { createSecretKey } from "node:crypto";
+import process from "node:process";
+import { IUser } from "../types/index.ts";
 
 export interface ITokenPayload extends Pick<IUser, 'name' | 'id'> {
 }
@@ -28,7 +29,7 @@ const validateToken = async (req: RequestWithUser, res: Response, next: NextFunc
       throw new Error('JWT_SECRET is not defined');
     }
 
-    const { payload, protectedHeader, ...rest } = await jwtVerify<ITokenPayload>(token, secretKey);
+    const { payload } = await jwtVerify<ITokenPayload>(token, secretKey);
     const { name, id } = payload;
     // Attach payload to request object for further use in other routes
     req.user = { name, id };
