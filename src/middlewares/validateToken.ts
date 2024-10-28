@@ -4,14 +4,14 @@ import { createSecretKey } from "node:crypto";
 import process from "node:process";
 import { IUser } from "../types/index.ts";
 
-export interface ITokenPayload extends Pick<IUser, 'name' | 'id'> {
-}
+export type ITokenPayload = Pick<IUser, 'name' | 'id' | 'role'>;
 
 export interface RequestWithUser extends Request {
   user?: ITokenPayload;
 }
 
-const validateToken = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+const validateToken = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+
   const token = req.header('x-token');
 
   if (!token) {
@@ -30,9 +30,9 @@ const validateToken = async (req: RequestWithUser, res: Response, next: NextFunc
     }
 
     const { payload } = await jwtVerify<ITokenPayload>(token, secretKey);
-    const { name, id } = payload;
+    const { name, id, role } = payload;
     // Attach payload to request object for further use in other routes
-    req.user = { name, id };
+    req.user = { name, id, role };
 
     next();
   } catch (error) {
@@ -41,6 +41,7 @@ const validateToken = async (req: RequestWithUser, res: Response, next: NextFunc
       ok: false,
       msg: 'Invalid token'
     });
+    return
   }
 };
 

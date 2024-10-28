@@ -2,7 +2,6 @@ import { connect } from "mongoose";
 import process from "node:process";
 
 const dbConnection = async () => {
-
   try {
 
     if (process.env.MONGODB_CNN)
@@ -10,11 +9,9 @@ const dbConnection = async () => {
 
     console.log('Database online');
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error('Error at database initialization: ' + error);
   }
-
-
 };
 
 export {

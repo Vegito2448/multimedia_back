@@ -1,8 +1,11 @@
-import authRouter from "./auth";
-import eventsRouter from "./events";
-
+import authRouter from "./auth.ts";
+import categoryRouter from "./category.ts";
+import contentRouter from "./content.ts";
+import finderRouter from "./finder.ts";
+import topicRouter from "./topic.ts";
 
 export {
   authRouter,
-  eventsRouter
+  categoryRouter, contentRouter, finderRouter, topicRouter
 };
+

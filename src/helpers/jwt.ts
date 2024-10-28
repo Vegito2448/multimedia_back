@@ -1,16 +1,16 @@
-import { createSecretKey } from "crypto";
 import { SignJWT } from "jose";
-import { IUser } from "../types";
+import { createSecretKey } from "node:crypto";
 import process from "node:process";
+import { IUser } from "../types/index.ts";
 
-const generateToken = async ({ id, name }: IUser) => {
+const generateToken = async ({ id, name, role }: IUser) => {
   try {
     const secret = process.env.JWT_SECRET;
     if (!secret) {
       throw new Error('JWT_SECRET is not defined');
     }
     const secretKey = createSecretKey(secret, 'utf8');
-    const payload = { id, name };
+    const payload = { id, name, role };
 
     const token = await new SignJWT({ ...payload })
       .setProtectedHeader({ alg: 'HS256' })

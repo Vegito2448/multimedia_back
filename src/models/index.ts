@@ -1,6 +1,8 @@
+import Category from "./Category.ts";
+import Content from "./Content.ts";
+import Topic from "./Topic.ts";
 import User from "./User.ts";
-import Event from "./event.ts";
 export {
-  Event, User
+  Category, Content, Topic, User
 };
 
