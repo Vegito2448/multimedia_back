@@ -40,11 +40,7 @@ const createUser = async (req: GenericRequest, res: Response) => {
     res.status(201).json({
       ok: true,
       msg: 'Register success',
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email
-      }
+      user
     });
 
   } catch (error) {
@@ -90,11 +86,7 @@ const login = async (req: GenericRequest, res: Response) => {
     res.status(200).json({
       ok: true,
       msg: 'Login success',
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email
-      },
+      user,
       token
     });
   } catch (error) {
@@ -137,10 +129,12 @@ const updateUser = async (req: RequestWithUser, res: Response) => {
       return;
     }
 
+    let newPassword = user.password;
     // Encrypt password
+    if (password) {
     const salt = await bcrypt.genSalt();
-
-    const newPassword = await bcrypt.hash(password.toString(), salt);
+      newPassword = await bcrypt.hash(password.toString(), salt);
+    }
 
     const updatedUser = await User.findByIdAndUpdate(
       id,

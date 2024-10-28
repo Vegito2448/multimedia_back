@@ -6,5 +6,13 @@
   },
   "compilerOptions": {
     "strict": true
+  },
+  "deploy": {
+    "project": "5f9350a0-421b-4f90-ab19-3f8158ff63dd",
+    "exclude": [
+      "**/node_modules"
+    ],
+    "include": [],
+    "entrypoint": "src\\index.ts"
   }
 }

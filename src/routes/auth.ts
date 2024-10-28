@@ -25,8 +25,9 @@ router.post('/', [
 ], login);
 
 router.put('/:id', [
+  check('role', 'Role is required').isIn(['admin', 'creator', 'reader']),
+  check('username', 'Username is required').not().isEmpty(),
   check('email', 'Email is required').isEmail(),
-  check('password', 'Password is required').isLength({ min: 8 }),
   validateFields,
   validateToken
 ], updateUser);
