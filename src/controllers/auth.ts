@@ -1,5 +1,5 @@
 
-import { compare, genSalt, hash } from "bcrypt";
+import { compare, genSalt, hash } from "bcryptjs";
 import { Request, Response } from "express";
 import { generateToken } from "../helpers/index.ts";
 import { RequestWithUser, type ITokenPayload } from "../middlewares/index.ts";
