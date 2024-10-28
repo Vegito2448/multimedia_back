@@ -1,5 +1,5 @@
 
-import { compare, genSalt, hash } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { generateToken } from "../helpers/index.ts";
 import { RequestWithUser, type ITokenPayload } from "../middlewares/index.ts";
@@ -31,9 +31,9 @@ const createUser = async (req: GenericRequest, res: Response) => {
     user = new User({ name, email, password, username: String(username).toLowerCase(), role });
 
     // Encrypt password
-    const salt = await genSalt();
+    const salt = await bcrypt.genSalt();
 
-    user.password = await hash(password.toString(), salt);
+    user.password = await bcrypt.hash(password.toString(), salt);
 
     await user.save();
 
@@ -74,7 +74,7 @@ const login = async (req: GenericRequest, res: Response) => {
     }
 
     // Check password
-    const validPassword = await compare(password.toString(), user.password);
+    const validPassword = await bcrypt.compare(password.toString(), user.password);
 
     if (!validPassword) {
       res.status(400).json({
@@ -138,9 +138,9 @@ const updateUser = async (req: RequestWithUser, res: Response) => {
     }
 
     // Encrypt password
-    const salt = await genSalt();
+    const salt = await bcrypt.genSalt();
 
-    const newPassword = await hash(password.toString(), salt);
+    const newPassword = await bcrypt.hash(password.toString(), salt);
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
