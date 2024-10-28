@@ -12,6 +12,14 @@ export const createContent = async (req: GenericRequest, res: Response) => {
   try {
     const file = req.file as Express.Multer.File;
 
+    if (!file) {
+      res.status(400).json({
+        ok: false,
+        msg: 'No file uploaded'
+      });
+      return;
+    }
+
     const result = await uploadToCloudinary(file);
 
     if (!result) {
@@ -90,7 +98,7 @@ export const getContentById = async (req: GenericRequest, res: Response): Promis
 
 export const updateContent = async (req: RequestWithUser, res: Response): Promise<void> => {
   try {
-    const file = req.file as Express.Multer.File;
+    const file = req?.file as Express.Multer.File | undefined;
 
     const { id: userLoggedID, role: roleLogged } = req.user as ITokenPayload;
 
@@ -98,7 +106,7 @@ export const updateContent = async (req: RequestWithUser, res: Response): Promis
 
     const { title, description, category, topic } = req.body;
 
-    const newContent = {
+    const newContent: Partial<IContent> = {
       title,
       category,
       topic,
@@ -109,7 +117,7 @@ export const updateContent = async (req: RequestWithUser, res: Response): Promis
     let content = await Content.findById(id);
 
     if (!content || content.deletedAt) {
-      res.status(404).json({ message: 'contend not found' });
+      res.status(404).json({ message: 'Content not found' });
       return;
     }
 
@@ -121,29 +129,31 @@ export const updateContent = async (req: RequestWithUser, res: Response): Promis
       return;
     }
 
-    if (content.filePublicId)
-      await deleteFromCloudinary(content.filePublicId);
+    if (file) {
+      if (content.filePublicId) {
+        await deleteFromCloudinary(content.filePublicId);
+      }
 
-    const result = await uploadToCloudinary(file);
+      const result = await uploadToCloudinary(file);
 
-    if (!result) {
-      res.status(400).json({
-        message: 'Error uploading file'
-      });
-      return;
+      if (!result) {
+        res.status(400).json({
+          message: 'Error uploading file'
+        });
+        return;
+      }
+
+      newContent.url = result.secure_url;
+      newContent.filePublicId = result.public_id;
     }
 
     content = await Content.findByIdAndUpdate(
       id,
-      {
-        ...newContent,
-        url: result.secure_url,
-        filePublicId: result.public_id
-      },
+      newContent,
       { new: true }
     ).populate('category', '-__v')
       .populate('topic', '-__v')
-      .populate('createdBy', '-__v -password');;
+      .populate('createdBy', '-__v -password');
 
     res.status(200).json({
       ok: true,

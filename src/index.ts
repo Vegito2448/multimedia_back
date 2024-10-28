@@ -16,13 +16,6 @@ const port = process.env.PORT || 3000;
 // Create HTTP server
 const server = createServer(app);
 
-// Integrate Socket.io with the server
-export const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
 
 // Database
 dbConnection();
@@ -42,6 +35,14 @@ app.use('/api/categories', categoryRouter);
 app.use('/api/topics', topicRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/search', finderRouter);
+
+// Integrate Socket.io with the server
+export const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
 // WebSocket connection
 io.on('connection', (socket) => {

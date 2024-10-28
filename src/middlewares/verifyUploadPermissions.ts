@@ -8,10 +8,7 @@ export const verifyUploadPermissions = async (req: Request, res: Response, next:
     const file = req.file as Express.Multer.File;
 
     if (!file) {
-      res.status(400).json({
-        ok: false,
-        msg: 'No file uploaded'
-      });
+      next();
       return;
     }
 
